@@ -1,12 +1,6 @@
 function Physics(width, height) {
 	this.width = width;
 	this.height = height;
-	this.canvas = canvas;
-	this.mouse = new Vec2(0,0);
-	this.mouseDown = false;
-	this.draggedEntity = null;
-	this.selectionRadius = 20;
-	this.highlightColor = "#4f545c";
 	
 	this.bounds = function (particle) {
 		if (particle.pos.y > this.height-1)
@@ -18,32 +12,6 @@ function Physics(width, height) {
 		if (particle.pos.x > this.width-1)
 			particle.pos.x = this.width-1;
 	}
-	
-	var _this = this;
-	
-	// prevent context menu
-	this.canvas.oncontextmenu = function(e) {
-		e.preventDefault();
-	};
-	
-	this.canvas.onmousedown = function(e) {
-		_this.mouseDown = true;
-		var nearest = _this.nearestEntity();
-		if (nearest) {
-			_this.draggedEntity = nearest;
-		}
-	};
-	
-	this.canvas.onmouseup = function(e) {
-		_this.mouseDown = false;
-		_this.draggedEntity = null;
-	};
-	
-	this.canvas.onmousemove = function(e) {
-		var rect = _this.canvas.getBoundingClientRect();
-		_this.mouse.x = e.clientX - rect.left;
-		_this.mouse.y = e.clientY - rect.top;
-	};  
 	
 	// simulation params
 	this.gravity = new Vec2(0,0.2);
@@ -101,5 +69,32 @@ Physics.prototype.frame = function(step) {
 		var particles = this.composites[c].particles;
 		for (i in particles)
 			this.bounds(particles[i]);
+	} 
+}
+
+Physics.prototype.nearestEntity = function() {
+	var c, i;
+	var d2Nearest = 0;
+	var entity = null;
+	var constraintsNearest = null;
+	
+	// find nearest point
+	for (c in this.composites) {
+		var particles = this.composites[c].particles;
+		for (i in particles) {
+			var d2 = particles[i].pos.dist2(this.mouse);
+			if (d2 <= this.selectionRadius*this.selectionRadius && (entity == null || d2 < d2Nearest)) {
+				entity = particles[i];
+				constraintsNearest = this.composites[c].constraints;
+				d2Nearest = d2;
+			}
+		}
 	}
+	
+	// search for pinned constraints for this entity
+	for (i in constraintsNearest)
+		if (constraintsNearest[i] instanceof PinConstraint && constraintsNearest[i].a == entity)
+			entity = constraintsNearest[i];
+	
+	return entity;
 }
