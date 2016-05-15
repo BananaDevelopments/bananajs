@@ -1,7 +1,7 @@
 var config = {
     input: {
         mouse: {
-            onRightClick: function(e, object) { console.log(object);
+            onRightClick: function(e, object) { 
 		e.preventDefault();
             },
             
@@ -10,8 +10,15 @@ var config = {
                 
                 var nearest = object.physics.nearestEntity(object.input.mouse);
                 
-                if (nearest) {
+                if (nearest) { 
                     object.input.mouse.draggedEntity = nearest;
+                    
+                    object.renderer.additional.push(function() { 
+                        this.ctx.beginPath();
+                        this.ctx.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2*Math.PI);
+                        this.ctx.strokeStyle = object.input.mouse.highlightColor;
+                        this.ctx.stroke(); 
+                    });
                 }
             },
             
@@ -23,21 +30,16 @@ var config = {
             onMouseMove: function(e, object) { 
 		var rect = object.renderer.canvas.getBoundingClientRect();
                 
-		object.input.mouse.mouse.x = e.clientX - rect.left;
-		object.input.mouse.mouse.y = e.clientY - rect.top;
+		object.input.mouse.cursor.x = e.clientX - rect.left; //console.log(object.input.mouse.cursor.x + ', ' + object.input.mouse.cursor.y);
+		object.input.mouse.cursor.y = e.clientY - rect.top; 
             },
             
-            onMouseOver: function() {
-                /*return function() {
-                    var nearest = this.input.mouse.draggedEntity || this.physics.nearestEntity();
+            onMouseOver: function(e, object) {
+                    var nearest = object.input.mouse.draggedEntity || object.physics.nearestEntity(object.input.mouse);
                     
                     if (nearest) {
-                        this.ctx.beginPath();
-                        this.ctx.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2*Math.PI);
-                        this.ctx.strokeStyle = this.highlightColor;
-                        this.ctx.stroke();
+                        
                     }
-                }*/
             }
         }
     }

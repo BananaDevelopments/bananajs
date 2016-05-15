@@ -1,5 +1,5 @@
 var Mouse = function(config) {
-    this.mouse = new Vec2(0,0);
+    this.cursor = new Vec2(0,0);
     this.mouseDown = false;
     this.draggedEntity = null;
     this.selectionRadius = 20;

@@ -39,6 +39,7 @@ Renderer.prototype.init = function(config) {
 	}
         
     this.entities = [];
+    this.additional = [];
 }
 
 Renderer.prototype.draw = function(composites) { 
@@ -52,6 +53,10 @@ Renderer.prototype.draw = function(composites) {
 
 		composites[c].draw.call(self, composites[c].particles);
 	}
+        
+        for(var i in this.additional) { //console.log(i);
+            this.additional[i].call(self);
+        }
 }
 
 

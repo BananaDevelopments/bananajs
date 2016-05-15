@@ -19,7 +19,7 @@ BananaJs.prototype.start = function() {
 }
 
 BananaJs.prototype.tick = function() {
-    this.physics.frame(this.renderer.framerate);
+    this.physics.frame(this.renderer.framerate, this.input.mouse);
     
     var entities = this.physics.composites;
     
@@ -33,11 +33,6 @@ BananaJs.prototype.tick = function() {
 }
 
 BananaJs.prototype.bindInput = function() {
-    this.input.mouse.onRightClick.bind(this);
-    this.input.mouse.onMouseDown.bind(this);
-    this.input.mouse.onMouseUp.bind(this);
-    this.input.mouse.onMouseMove.bind(this);
-    
     var self = this;
     
     this.renderer.canvas.oncontextmenu = function(e) {
@@ -50,6 +45,14 @@ BananaJs.prototype.bindInput = function() {
     
     this.renderer.canvas.onmouseup = function(e) {
         return self.input.mouse.onMouseUp.call(self, e, self);
+    }
+    
+    this.renderer.canvas.onmousemove = function(e) {
+        return self.input.mouse.onMouseMove.call(self, e, self);
+    }
+    
+    this.renderer.canvas.onmousemove = function(e) {
+        return self.input.mouse.onMouseMove.call(self, e, self);
     }
     
     //this.renderer.canvas.onmousemove = this.input.mouse.onMouseMove;

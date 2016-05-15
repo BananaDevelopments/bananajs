@@ -22,7 +22,7 @@ function Physics(width, height) {
 	this.composites = [];
 }
 
-Physics.prototype.frame = function(step) {
+Physics.prototype.frame = function(step, mouse) {
 	var i, j, c;
 
 	for (c in this.composites) {
@@ -52,8 +52,9 @@ Physics.prototype.frame = function(step) {
 	}
 	
 	// handle dragging of entities
-	if (this.draggedEntity)
-		this.draggedEntity.pos.mutableSet(this.mouse);
+	if (mouse.draggedEntity) { 
+		mouse.draggedEntity.pos.mutableSet(mouse.cursor);
+        }
 		
 	// relax
 	var stepCoef = 1/step;
@@ -82,9 +83,9 @@ Physics.prototype.nearestEntity = function(mouse) {
 	for (c in this.composites) {
 		var particles = this.composites[c].particles;
 		for (i in particles) {
-			var d2 = particles[i].pos.dist2(mouse);
-			if (d2 <= this.selectionRadius*this.selectionRadius && (entity == null || d2 < d2Nearest)) {
-				entity = particles[i];
+			var d2 = particles[i].pos.dist2(mouse.cursor);
+			if (d2 <= mouse.selectionRadius*mouse.selectionRadius && (entity == null || d2 < d2Nearest)) {
+				entity = particles[i]; 
 				constraintsNearest = this.composites[c].constraints;
 				d2Nearest = d2;
 			}
