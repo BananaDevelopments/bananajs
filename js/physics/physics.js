@@ -72,7 +72,7 @@ Physics.prototype.frame = function(step) {
 	} 
 }
 
-Physics.prototype.nearestEntity = function() {
+Physics.prototype.nearestEntity = function(mouse) {
 	var c, i;
 	var d2Nearest = 0;
 	var entity = null;
@@ -82,7 +82,7 @@ Physics.prototype.nearestEntity = function() {
 	for (c in this.composites) {
 		var particles = this.composites[c].particles;
 		for (i in particles) {
-			var d2 = particles[i].pos.dist2(this.mouse);
+			var d2 = particles[i].pos.dist2(mouse);
 			if (d2 <= this.selectionRadius*this.selectionRadius && (entity == null || d2 < d2Nearest)) {
 				entity = particles[i];
 				constraintsNearest = this.composites[c].constraints;

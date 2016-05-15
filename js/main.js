@@ -1,5 +1,49 @@
-var r = new Renderer();
-var physics = new Physics(r.width, r.height);
+var config = {
+    input: {
+        mouse: {
+            onRightClick: function(e, object) { console.log(object);
+		e.preventDefault();
+            },
+            
+            onMouseDown: function(e, object) {
+		object.input.mouse.mouseDown = true;
+                
+                var nearest = object.physics.nearestEntity(object.input.mouse);
+                
+                if (nearest) {
+                    object.input.mouse.draggedEntity = nearest;
+                }
+            },
+            
+            onMouseUp: function(e, object) {
+		object.input.mouse.mouseDown = false;
+		object.input.mouse.draggedEntity = null;
+            },
+	
+            onMouseMove: function(e, object) { 
+		var rect = object.renderer.canvas.getBoundingClientRect();
+                
+		object.input.mouse.mouse.x = e.clientX - rect.left;
+		object.input.mouse.mouse.y = e.clientY - rect.top;
+            },
+            
+            onMouseOver: function() {
+                /*return function() {
+                    var nearest = this.input.mouse.draggedEntity || this.physics.nearestEntity();
+                    
+                    if (nearest) {
+                        this.ctx.beginPath();
+                        this.ctx.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2*Math.PI);
+                        this.ctx.strokeStyle = this.highlightColor;
+                        this.ctx.stroke();
+                    }
+                }*/
+            }
+        }
+    }
+};
+
+var bananaJs = new BananaJs(config);
 
 var Shape = function(origin, radius, segments, spokeStiffness, treadStiffness) {
 	var stride = (2*Math.PI)/segments;
@@ -46,9 +90,7 @@ var Shape = function(origin, radius, segments, spokeStiffness, treadStiffness) {
 	return composite;
 }
 
-var shape = physics.composites.push(Shape(new Vec2(500, 110), 90, 4, 1, 1));
-var shape2 = physics.composites.push(Shape(new Vec2(200,110), 50, 30, 0.3, 0.9));
+bananaJs.addEntity(Shape(new Vec2(500, 110), 90, 4, 1, 1));
+bananaJs.addEntity(Shape(new Vec2(200,110), 90, 30, 0.3, 0.9));
 
-var entities = physics.composites;
-
-r.render(entities, physics);
+bananaJs.start();
