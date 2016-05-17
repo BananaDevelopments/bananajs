@@ -93,6 +93,6 @@ var Shape = function(origin, radius, segments, spokeStiffness, treadStiffness) {
 }
 
 bananaJs.addEntity(Shape(new Vec2(500, 110), 90, 4, 1, 1));
-bananaJs.addEntity(Shape(new Vec2(200,110), 90, 30, 0.3, 0.9));
+bananaJs.addEntity(Shape(new Vec2(200,110), 90, 30, 1, 1));
 
 bananaJs.start();

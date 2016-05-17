@@ -14,9 +14,9 @@ function Physics(width, height) {
 	}
 	
 	// simulation params
-	this.gravity = new Vec2(0,0.2);
+	this.gravity = new Vec2(0,0.3);
 	this.friction = 0.99;
-	this.groundFriction = 0.8;
+	this.groundFriction = 0.4;
 	
 	// holds composite entities
 	this.composites = [];
